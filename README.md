@@ -2,14 +2,10 @@
 
 AIMP Auto Pause/Resume is a Python utility that automatically controls the playback of the AIMP music player based on the state of other audio sessions on your system. When any other application (e.g., a video player) is actively running the utility will pause AIMP. Once these sessions become inactive, AIMP will resume playing.
 
----
-
 ## Features
 
 - **Automatic Detection:** Monitors system audio sessions using the [pycaw](https://github.com/AndreMiras/pycaw) library.
 - **Seamless AIMP Control:** Automatically pauses AIMP when another application is active and resumes playback when all other sessions are inactive.
-
----
 
 ## Prerequisites
 
@@ -17,8 +13,6 @@ AIMP Auto Pause/Resume is a Python utility that automatically controls the playb
 - **Required Python Packages:**
   - [pyaimp](https://pypi.org/project/pyaimp/)
   - [pycaw](https://github.com/AndreMiras/pycaw)
-
----
 
 ## Installation
 
@@ -48,8 +42,6 @@ AIMP Auto Pause/Resume is a Python utility that automatically controls the playb
    pip install pyaimp pycaw
    ```
 
----
-
 ## Usage
 
 1. **Ensure AIMP is Installed:**  
@@ -65,8 +57,6 @@ AIMP Auto Pause/Resume is a Python utility that automatically controls the playb
 
 3. **Logging:**  
    The console output will display debugging messages, such as active session changes and AIMP control actions (pause/resume).
-
----
 
 ## Customization
 
