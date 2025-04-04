@@ -7,6 +7,18 @@ AIMP_EXE = 'AIMP.exe'
 # Variable to keep track of the last command sent to avoid redundant actions
 sent_command = 'play'
 
+last_message = ''
+PAUSE_MESSAGE = "AIMP paused due to active session."
+RESUME_MESSAGE = "AIMP resumed as no active session found."
+
+
+def display_message(message):
+    global last_message
+
+    if last_message != message:
+        print(message)
+        last_message = message
+
 
 def is_peak_value_exist(session) -> bool:
     """Check if the audio session is producing any significant sound"""
@@ -30,8 +42,12 @@ def get_audio_sessions() -> list:
 
     # Filter sessions to include only those with an associated process
     active_sessions = [
-        session.Process.name() for session in sessions if session.Process and is_peak_value_exist(session)
+        session.Process.name() for session in sessions if session.Process and is_peak_value_exist(session) and session.Process.name() != AIMP_EXE
     ]
+
+    if active_sessions:
+        message = f"Active sessions: {' - '.join(active_sessions)}"
+        display_message(message)
 
     return active_sessions
 
@@ -47,12 +63,6 @@ def control_aimp():
 
     active_sessions = get_audio_sessions()
 
-    # Remove AIMP's own process from the active sessions list if present
-    try:
-        active_sessions.remove(AIMP_EXE)
-    except ValueError:
-        pass
-
     try:
         # Create a client instance for AIMP control
         client = Client()
@@ -62,10 +72,12 @@ def control_aimp():
         if state == PlayBackState.Playing and active_sessions:
             client.pause()
             sent_command = 'pause'
+            display_message(PAUSE_MESSAGE)
         # If AIMP is not playing and it was paused by this script, resume playback when no other audio is active.
         elif state != PlayBackState.Playing and sent_command == 'pause' and not active_sessions:
             client.play()
             sent_command = 'play'
+            display_message(RESUME_MESSAGE)
     except RuntimeError:
         # In case of errors with AIMP client operations, do nothing.
         pass
